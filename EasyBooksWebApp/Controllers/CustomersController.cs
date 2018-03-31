@@ -43,7 +43,7 @@ namespace EasyBooksWebApp.Controllers
                 
                 return View(user.Customers);
             }
-            return Redirect("Account/Login");
+            return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
         // GET: Customers/Details/5
@@ -74,7 +74,7 @@ namespace EasyBooksWebApp.Controllers
                 ViewData["TotalDue"] = customer.Invoices.Select(i => i.TotalAmount).Sum() - customer.ReceivePayments.Select(rP => rP.AmountReceived).Sum();
                 return View(customer);
             }
-            return Redirect("Account/Login");
+            return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
         // GET: Customers/Create
@@ -86,7 +86,7 @@ namespace EasyBooksWebApp.Controllers
                 ViewData["UserId"] = _userManager.GetUserId(User);
                 return View();
             }
-            return Redirect("Account/Login");
+            return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
         // POST: Customers/Create
@@ -122,7 +122,7 @@ namespace EasyBooksWebApp.Controllers
                 ViewData["UserId"] = _userManager.GetUserId(User);
                 return View(customer);
             }
-            return Redirect("Account/Login");
+            return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
         // GET: Customers/Edit/5
@@ -148,7 +148,7 @@ namespace EasyBooksWebApp.Controllers
                 ViewData["UserId"] = _userManager.GetUserId(User);
                 return View(customer);
             }
-            return Redirect("Account/Login");
+            return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
         // POST: Customers/Edit/5
@@ -212,7 +212,7 @@ namespace EasyBooksWebApp.Controllers
                 ViewData["UserId"] = _userManager.GetUserId(User);
                 return View(customer);
             }
-            return Redirect("Account/Login");
+            return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
         // GET: Customers/Delete/5
@@ -238,7 +238,7 @@ namespace EasyBooksWebApp.Controllers
 
                 return View(customer);
             }
-            return Redirect("Account/Login");
+            return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
         // POST: Customers/Delete/5
@@ -274,7 +274,7 @@ namespace EasyBooksWebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return Redirect("Account/Login");
+            return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
         #region Helpers
