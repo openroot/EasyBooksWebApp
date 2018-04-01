@@ -1,0 +1,53 @@
+﻿@model IEnumerable<EasyBooksWebApp.Models.ReceivePayment>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentMethod.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AmountReceived)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.FirstMidName) @Html.DisplayFor(modelItem => item.Customer.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentMethod.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AmountReceived)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ReceivePaymentID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ReceivePaymentID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ReceivePaymentID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

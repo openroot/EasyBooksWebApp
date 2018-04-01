@@ -27,5 +27,6 @@ namespace EasyBooksWebApp.Data
         public DbSet<State> State { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<Invoice> Invoice { get; set; }
+        public DbSet<ReceivePayment> ReceivePayment { get; set; }
     }
 }

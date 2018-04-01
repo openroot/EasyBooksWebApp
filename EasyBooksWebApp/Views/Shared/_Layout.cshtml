@@ -30,9 +30,6 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @*<li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>*@
                     @if (Context.User.Identity.IsAuthenticated)
                     {
                         <li class="dropdown">
@@ -40,7 +37,7 @@
                             <ul class="dropdown-menu">
                                 <li><a asp-area="" asp-controller="Customers" asp-action="Index">Customers</a></li>
                                 <li><a asp-area="" asp-controller="Invoices" asp-action="Index">Invoices</a></li>
-                                <li><a href="#">Receive Payment</a></li>
+                                <li><a asp-area="" asp-controller="ReceivePayments" asp-action="Index">Receive Payment</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -51,6 +48,12 @@
                                 <li><a href="#">Bill Payment</a></li>
                             </ul>
                         </li>
+                    }
+                    else
+                    {
+                        <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                     }
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")

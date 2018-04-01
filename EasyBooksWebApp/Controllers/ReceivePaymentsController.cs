@@ -10,32 +10,33 @@ using EasyBooksWebApp.Models;
 
 namespace EasyBooksWebApp.Controllers
 {
-    public class InvoicesController : Controller
+    public class ReceivePaymentsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public InvoicesController(ApplicationDbContext context)
+        public ReceivePaymentsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Invoices
+        // GET: ReceivePayments
         public async Task<IActionResult> Index()
         {
             if (User.Identity.IsAuthenticated)
             {
                 var user = await GetUserQueryable().
                     Include(u => u.Customers).
-                        ThenInclude(c => c.Invoices)
+                        ThenInclude(c => c.ReceivePayments).
+                            ThenInclude(rP => rP.PaymentMethod)                            
                     .SingleOrDefaultAsync();
                 
-                var invoices = user.Customers.SelectMany(c => c.Invoices).ToList();
-                return View(invoices);
+                var receivePayment = user.Customers.SelectMany(c => c.ReceivePayments).ToList();
+                return View(receivePayment);
             }
             return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
-        // GET: Invoices/Details/5
+        // GET: ReceivePayments/Details/5
         public async Task<IActionResult> Details(long? id)
         {
             if (User.Identity.IsAuthenticated)
@@ -47,23 +48,24 @@ namespace EasyBooksWebApp.Controllers
 
                 var user = await GetUserQueryable().
                         Include(u => u.Customers).
-                            ThenInclude(c => c.Invoices).
+                            ThenInclude(c => c.ReceivePayments).
+                                ThenInclude(rP => rP.PaymentMethod).
                         Include(u => u.Customers).
                             ThenInclude(c => c.State)
                         .SingleOrDefaultAsync();
-                
-                var invoice = user.Customers.SelectMany(c => c.Invoices).SingleOrDefault(i => i.InvoiceID == id);
-                if (invoice == null)
+
+                var receivePayment = user.Customers.SelectMany(c => c.ReceivePayments).SingleOrDefault(i => i.ReceivePaymentID == id);
+                if (receivePayment == null)
                 {
                     return NotFound();
                 }
 
-                return View(invoice);
+                return View(receivePayment);
             }
             return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
-        // GET: Invoices/Create
+        // GET: ReceivePayments/Create
         public async Task<IActionResult> Create()
         {
             if (User.Identity.IsAuthenticated)
@@ -75,38 +77,39 @@ namespace EasyBooksWebApp.Controllers
 
                 var customerList = user.Customers.Select(c => new { CustomerID = c.CustomerID, Description = c.FirstMidName + " " + c.LastName + ", " + c.State.Name });
                 ViewData["CustomerID"] = new SelectList(customerList, "CustomerID", "Description");
+                ViewData["PaymentMethodID"] = new SelectList(_context.PaymentMethod.OrderBy(pM => pM.Name), "PaymentMethodID", "Name");
                 return View();
             }
             return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
-        // POST: Invoices/Create
+        // POST: ReceivePayments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("InvoiceID,CustomerID,InvoiceNo,InvoiceDate,DueDate,Memo,TotalAmount")] Invoice invoice)
+        public async Task<IActionResult> Create([Bind("ReceivePaymentID,CustomerID,PaymentDate,PaymentMethodID,ReferenceNo,AmountReceived")] ReceivePayment receivePayment)
         {
             if (User.Identity.IsAuthenticated)
             {
                 if (ModelState.IsValid)
                 {
-                    _context.Add(invoice);
+                    _context.Add(receivePayment);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
-
                 var user = await GetUserQueryable().
                         Include(u => u.Customers).
                             ThenInclude(c => c.State)
                         .SingleOrDefaultAsync();
 
                 var customerList = user.Customers.Select(c => new { CustomerID = c.CustomerID, Description = c.FirstMidName + " " + c.LastName + ", " + c.State.Name });
-                ViewData["CustomerID"] = new SelectList(customerList, "CustomerID", "Description", invoice.CustomerID);
-                return View(invoice);
+                ViewData["CustomerID"] = new SelectList(customerList, "CustomerID", "Description", receivePayment.CustomerID);
+                ViewData["PaymentMethodID"] = new SelectList(_context.PaymentMethod, "PaymentMethodID", "Name", receivePayment.PaymentMethodID);
+                return View(receivePayment);
             }
             return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
-        // GET: Invoices/Edit/5
+        // GET: ReceivePayments/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
             if (User.Identity.IsAuthenticated)
@@ -117,32 +120,33 @@ namespace EasyBooksWebApp.Controllers
                 }
 
                 var user = await GetUserQueryable().
-                        Include(u => u.Customers).
-                            ThenInclude(c => c.Invoices).
-                        Include(u => u.Customers).
-                            ThenInclude(c => c.State)
-                        .SingleOrDefaultAsync();
+                       Include(u => u.Customers).
+                           ThenInclude(c => c.ReceivePayments).
+                       Include(u => u.Customers).
+                           ThenInclude(c => c.State)
+                       .SingleOrDefaultAsync();
 
-                var invoice = user.Customers.SelectMany(c => c.Invoices).SingleOrDefault(i => i.InvoiceID == id);
-                if (invoice == null)
+                var receivePayment = user.Customers.SelectMany(c => c.ReceivePayments).SingleOrDefault(i => i.ReceivePaymentID == id);
+                if (receivePayment == null)
                 {
                     return NotFound();
                 }
                 var customerList = user.Customers.Select(c => new { CustomerID = c.CustomerID, Description = c.FirstMidName + " " + c.LastName + ", " + c.State.Name });
-                ViewData["CustomerID"] = new SelectList(customerList, "CustomerID", "Description");
-                return View(invoice);
+                ViewData["CustomerID"] = new SelectList(customerList, "CustomerID", "Description", receivePayment.CustomerID);
+                ViewData["PaymentMethodID"] = new SelectList(_context.PaymentMethod, "PaymentMethodID", "Name", receivePayment.PaymentMethodID);
+                return View(receivePayment);
             }
             return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
-        // POST: Invoices/Edit/5
+        // POST: ReceivePayments/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("InvoiceID,CustomerID,InvoiceNo,InvoiceDate,DueDate,Memo,TotalAmount")] Invoice invoice)
+        public async Task<IActionResult> Edit(long id, [Bind("ReceivePaymentID,CustomerID,PaymentDate,PaymentMethodID,ReferenceNo,AmountReceived")] ReceivePayment receivePayment)
         {
             if (User.Identity.IsAuthenticated)
             {
-                if (id != invoice.InvoiceID)
+                if (id != receivePayment.ReceivePaymentID)
                 {
                     return NotFound();
                 }
@@ -151,12 +155,12 @@ namespace EasyBooksWebApp.Controllers
                 {
                     try
                     {
-                        _context.Update(invoice);
+                        _context.Update(receivePayment);
                         await _context.SaveChangesAsync();
                     }
                     catch (DbUpdateConcurrencyException)
                     {
-                        if (!InvoiceExists(invoice.InvoiceID))
+                        if (!ReceivePaymentExists(receivePayment.ReceivePaymentID))
                         {
                             return NotFound();
                         }
@@ -169,18 +173,19 @@ namespace EasyBooksWebApp.Controllers
                 }
 
                 var user = await GetUserQueryable().
-                        Include(u => u.Customers).
-                            ThenInclude(c => c.State)
-                        .SingleOrDefaultAsync();
+                       Include(u => u.Customers).
+                           ThenInclude(c => c.State)
+                       .SingleOrDefaultAsync();
 
                 var customerList = user.Customers.Select(c => new { CustomerID = c.CustomerID, Description = c.FirstMidName + " " + c.LastName + ", " + c.State.Name });
-                ViewData["CustomerID"] = new SelectList(customerList, "CustomerID", "Description", invoice.CustomerID);
-                return View(invoice);
+                ViewData["CustomerID"] = new SelectList(customerList, "CustomerID", "Description", receivePayment.CustomerID);
+                ViewData["PaymentMethodID"] = new SelectList(_context.PaymentMethod, "PaymentMethodID", "Name", receivePayment.PaymentMethodID);
+                return View(receivePayment);
             }
             return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
-        // GET: Invoices/Delete/5
+        // GET: ReceivePayments/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
             if (User.Identity.IsAuthenticated)
@@ -191,24 +196,25 @@ namespace EasyBooksWebApp.Controllers
                 }
 
                 var user = await GetUserQueryable().
-                        Include(u => u.Customers).
-                            ThenInclude(c => c.Invoices).
-                        Include(u => u.Customers).
-                            ThenInclude(c => c.State)
-                        .SingleOrDefaultAsync();
-                
-                var invoice = user.Customers.SelectMany(c => c.Invoices).SingleOrDefault(i => i.InvoiceID == id);
-                if (invoice == null)
+                       Include(u => u.Customers).
+                           ThenInclude(c => c.ReceivePayments).
+                                ThenInclude(rP => rP.PaymentMethod).
+                       Include(u => u.Customers).
+                           ThenInclude(c => c.State)
+                       .SingleOrDefaultAsync();
+
+                var receivePayment = user.Customers.SelectMany(c => c.ReceivePayments).SingleOrDefault(i => i.ReceivePaymentID == id);
+                if (receivePayment == null)
                 {
                     return NotFound();
                 }
 
-                return View(invoice);
+                return View(receivePayment);
             }
             return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
-        // POST: Invoices/Delete/5
+        // POST: ReceivePayments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
@@ -216,17 +222,17 @@ namespace EasyBooksWebApp.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var user = await GetUserQueryable().
-                        Include(u => u.Customers).
-                            ThenInclude(c => c.Invoices)
-                        .SingleOrDefaultAsync();
+                       Include(u => u.Customers).
+                           ThenInclude(c => c.ReceivePayments)
+                       .SingleOrDefaultAsync();
 
-                var invoice = user.Customers.SelectMany(c => c.Invoices).SingleOrDefault(i => i.InvoiceID == id);
-                if (invoice == null)
+                var receivePayment = user.Customers.SelectMany(c => c.ReceivePayments).SingleOrDefault(i => i.ReceivePaymentID == id);
+                if (receivePayment == null)
                 {
                     return NotFound();
                 }
 
-                _context.Invoice.Remove(invoice);
+                _context.ReceivePayment.Remove(receivePayment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -235,9 +241,9 @@ namespace EasyBooksWebApp.Controllers
 
         #region Helpers
 
-        private bool InvoiceExists(long id)
+        private bool ReceivePaymentExists(long id)
         {
-            return _context.Invoice.Any(e => e.InvoiceID == id);
+            return _context.ReceivePayment.Any(e => e.ReceivePaymentID == id);
         }
 
         private IQueryable<ApplicationUser> GetUserQueryable()
