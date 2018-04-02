@@ -65,7 +65,7 @@ namespace EasyBooksWebApp.Controllers
                         .ThenInclude(c => c.ReceivePayments)
                     .SingleOrDefaultAsync();
 
-                var customer = user.Customers.Where(c => c.CustomerID == id).SingleOrDefault();
+                var customer = user.Customers.SingleOrDefault(c => c.CustomerID == id);
                 if (customer == null)
                 {
                     return NotFound();
@@ -82,7 +82,7 @@ namespace EasyBooksWebApp.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                ViewData["StateID"] = new SelectList(_context.Set<State>().OrderBy(s => s.Name), "StateID", "Name");
+                ViewData["StateID"] = new SelectList(_context.State.OrderBy(s => s.Name), "StateID", "Name");
                 ViewData["UserId"] = _userManager.GetUserId(User);
                 return View();
             }
@@ -118,7 +118,7 @@ namespace EasyBooksWebApp.Controllers
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
-                ViewData["StateID"] = new SelectList(_context.Set<State>().OrderBy(s => s.Name), "StateID", "Name", customer.StateID);
+                ViewData["StateID"] = new SelectList(_context.State.OrderBy(s => s.Name), "StateID", "Name", customer.StateID);
                 ViewData["UserId"] = _userManager.GetUserId(User);
                 return View(customer);
             }
@@ -139,12 +139,12 @@ namespace EasyBooksWebApp.Controllers
                     .Include(u => u.Customers)
                     .SingleOrDefaultAsync();
 
-                var customer = user.Customers.Where(c => c.CustomerID == id).SingleOrDefault();
+                var customer = user.Customers.SingleOrDefault(c => c.CustomerID == id);
                 if (customer == null)
                 {
                     return NotFound();
                 }
-                ViewData["StateID"] = new SelectList(_context.Set<State>().OrderBy(s => s.Name), "StateID", "Name", customer.StateID);
+                ViewData["StateID"] = new SelectList(_context.State.OrderBy(s => s.Name), "StateID", "Name", customer.StateID);
                 ViewData["UserId"] = _userManager.GetUserId(User);
                 return View(customer);
             }
@@ -208,7 +208,7 @@ namespace EasyBooksWebApp.Controllers
                     }
                     return RedirectToAction(nameof(Index));
                 }
-                ViewData["StateID"] = new SelectList(_context.Set<State>().OrderBy(s => s.Name), "StateID", "Name", customer.StateID);
+                ViewData["StateID"] = new SelectList(_context.State.OrderBy(s => s.Name), "StateID", "Name", customer.StateID);
                 ViewData["UserId"] = _userManager.GetUserId(User);
                 return View(customer);
             }
@@ -230,7 +230,7 @@ namespace EasyBooksWebApp.Controllers
                         .ThenInclude(c => c.State)
                     .SingleOrDefaultAsync();
 
-                var customer = user.Customers.Where(c => c.CustomerID == id).SingleOrDefault();
+                var customer = user.Customers.SingleOrDefault(c => c.CustomerID == id);
                 if (customer == null)
                 {
                     return NotFound();
@@ -253,7 +253,7 @@ namespace EasyBooksWebApp.Controllers
                         .ThenInclude(c => c.State)
                     .SingleOrDefaultAsync();
 
-                var customer = user.Customers.Where(c => c.CustomerID == id).SingleOrDefault();
+                var customer = user.Customers.SingleOrDefault(c => c.CustomerID == id);
                 if (customer == null)
                 {
                     return NotFound();
