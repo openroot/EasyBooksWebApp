@@ -1,0 +1,48 @@
+﻿@model EasyBooksWebApp.Models.BillPayment
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Bill Payment</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Supplier)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Supplier.FirstMidName) @Html.DisplayFor(model => model.Supplier.LastName), @Html.DisplayFor(model => model.Supplier.State.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PaymentDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PaymentDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PaymentMethod.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PaymentMethod.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ReferenceNo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ReferenceNo)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AmountPaid)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AmountPaid)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.BillPaymentID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -30,8 +30,8 @@ namespace EasyBooksWebApp.Controllers
                             ThenInclude(rP => rP.PaymentMethod)                            
                     .SingleOrDefaultAsync();
                 
-                var receivePayment = user.Customers.SelectMany(c => c.ReceivePayments).ToList();
-                return View(receivePayment);
+                var receivePayments = user.Customers.SelectMany(c => c.ReceivePayments).ToList();
+                return View(receivePayments);
             }
             return RedirectToAction(nameof(AccountController.Login), "Account");
         }
@@ -103,7 +103,7 @@ namespace EasyBooksWebApp.Controllers
 
                 var customerList = user.Customers.Select(c => new { CustomerID = c.CustomerID, Description = c.FirstMidName + " " + c.LastName + ", " + c.State.Name });
                 ViewData["CustomerID"] = new SelectList(customerList, "CustomerID", "Description", receivePayment.CustomerID);
-                ViewData["PaymentMethodID"] = new SelectList(_context.PaymentMethod, "PaymentMethodID", "Name", receivePayment.PaymentMethodID);
+                ViewData["PaymentMethodID"] = new SelectList(_context.PaymentMethod.OrderBy(pM => pM.Name), "PaymentMethodID", "Name", receivePayment.PaymentMethodID);
                 return View(receivePayment);
             }
             return RedirectToAction(nameof(AccountController.Login), "Account");
@@ -133,7 +133,7 @@ namespace EasyBooksWebApp.Controllers
                 }
                 var customerList = user.Customers.Select(c => new { CustomerID = c.CustomerID, Description = c.FirstMidName + " " + c.LastName + ", " + c.State.Name });
                 ViewData["CustomerID"] = new SelectList(customerList, "CustomerID", "Description", receivePayment.CustomerID);
-                ViewData["PaymentMethodID"] = new SelectList(_context.PaymentMethod, "PaymentMethodID", "Name", receivePayment.PaymentMethodID);
+                ViewData["PaymentMethodID"] = new SelectList(_context.PaymentMethod.OrderBy(pM => pM.Name), "PaymentMethodID", "Name", receivePayment.PaymentMethodID);
                 return View(receivePayment);
             }
             return RedirectToAction(nameof(AccountController.Login), "Account");
@@ -179,7 +179,7 @@ namespace EasyBooksWebApp.Controllers
 
                 var customerList = user.Customers.Select(c => new { CustomerID = c.CustomerID, Description = c.FirstMidName + " " + c.LastName + ", " + c.State.Name });
                 ViewData["CustomerID"] = new SelectList(customerList, "CustomerID", "Description", receivePayment.CustomerID);
-                ViewData["PaymentMethodID"] = new SelectList(_context.PaymentMethod, "PaymentMethodID", "Name", receivePayment.PaymentMethodID);
+                ViewData["PaymentMethodID"] = new SelectList(_context.PaymentMethod.OrderBy(pM => pM.Name), "PaymentMethodID", "Name", receivePayment.PaymentMethodID);
                 return View(receivePayment);
             }
             return RedirectToAction(nameof(AccountController.Login), "Account");
