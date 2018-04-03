@@ -1,0 +1,54 @@
+﻿@model EasyBooksWebApp.Models.Bill
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Bill</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BillNo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BillNo)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Supplier)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Supplier.FirstMidName) @Html.DisplayFor(model => model.Supplier.LastName), @Html.DisplayFor(model => model.Supplier.State.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BillDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BillDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DueDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DueDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Memo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Memo)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalAmount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TotalAmount)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.BillID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

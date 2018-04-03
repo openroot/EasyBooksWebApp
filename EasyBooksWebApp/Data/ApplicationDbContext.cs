@@ -29,5 +29,6 @@ namespace EasyBooksWebApp.Data
         public DbSet<Invoice> Invoice { get; set; }
         public DbSet<ReceivePayment> ReceivePayment { get; set; }
         public DbSet<Supplier> Supplier { get; set; }
+        public DbSet<Bill> Bill { get; set; }
     }
 }
