@@ -46,7 +46,7 @@
                 @Html.DisplayFor(modelItem => item.DueDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TotalAmount)
+                ₹ @Html.DisplayFor(modelItem => item.TotalAmount)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.BillID">Edit</a> |

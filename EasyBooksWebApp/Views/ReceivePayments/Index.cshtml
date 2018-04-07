@@ -40,7 +40,7 @@
                 @Html.DisplayFor(modelItem => item.PaymentMethod.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AmountReceived)
+                ₹ @Html.DisplayFor(modelItem => item.AmountReceived)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ReceivePaymentID">Edit</a> |
