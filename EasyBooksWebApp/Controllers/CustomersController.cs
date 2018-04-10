@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EasyBooksWebApp.Data;
 using EasyBooksWebApp.Models;
+using Serilog;
 
 namespace EasyBooksWebApp.Controllers
 {
@@ -111,7 +112,10 @@ namespace EasyBooksWebApp.Controllers
                                 customer.ProfileImageName = fileName;
                             }
                         }
-                        catch (Exception ex) { }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, "Customer profile image upload error at Create().");
+                        }
                     }
 
                     _context.Add(customer);
@@ -178,7 +182,10 @@ namespace EasyBooksWebApp.Controllers
                                 {
                                     System.IO.File.Delete(Path.Combine(imageUploadPath, customer.ProfileImageName));
                                 }
-                                catch (Exception ex) { }
+                                catch (Exception ex)
+                                {
+                                    Log.Error(ex, "Customer profile image delete error at Edit().");
+                                }
                             }
                             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName).ToLower();
                             try
@@ -189,7 +196,10 @@ namespace EasyBooksWebApp.Controllers
                                     customer.ProfileImageName = fileName;
                                 }
                             }
-                            catch (Exception ex) { }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex, "Customer profile image upload error at Edit().");
+                            }
                         }
 
                         _context.Update(customer);
@@ -267,7 +277,10 @@ namespace EasyBooksWebApp.Controllers
                     {
                         System.IO.File.Delete(Path.Combine(imageUploadPath, customer.ProfileImageName));
                     }
-                    catch (Exception ex) { }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, "Customer profile image delete error at DeleteConfirmed().");
+                    }
                 }
 
                 _context.Customer.Remove(customer);

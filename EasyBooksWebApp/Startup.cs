@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using EasyBooksWebApp.Data;
 using EasyBooksWebApp.Models;
 using EasyBooksWebApp.Services;
+using Serilog;
+using Serilog.Events;
 
 namespace EasyBooksWebApp
 {
@@ -29,6 +31,12 @@ namespace EasyBooksWebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .MinimumLevel.Override("SerilogDemo", LogEventLevel.Information)
+                .WriteTo.File("Logs/Log.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: null, shared: true)
+                .CreateLogger();
+
             if (_env.IsDevelopment())
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
