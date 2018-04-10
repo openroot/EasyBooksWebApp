@@ -19,7 +19,7 @@ namespace EasyBooksWebApp.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IHostingEnvironment _appEnvironment;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly string _supplierImagePath = "\\uploads\\suppliers\\images";
+        private readonly string _supplierImagePath = "/uploads/suppliers/images";
 
         public SuppliersController(ApplicationDbContext context, IHostingEnvironment appEnvironment, UserManager<ApplicationUser> userManager)
         {
